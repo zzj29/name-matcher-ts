@@ -27,7 +27,7 @@ app.get("/names", (req: Request, res: Response, next: NextFunction) => {
 }
 );
 
-// Functions to load names from json file
+// Functions to load all names from json file
 function loadNames() {
   const data = fs.readFileSync(__dirname+"/names.json", "utf8")
   return JSON.parse(data)
