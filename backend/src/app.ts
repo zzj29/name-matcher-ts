@@ -1,10 +1,9 @@
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
-import { error } from "console";
 import fs from "fs";
 
+// start up the RestAPI
 const app = express();
-const port = 8888;
 const bodyParser = require('body-parser');
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -13,12 +12,21 @@ app.use(bodyParser.json());
 
 app.use(cors());
 
-app.listen(port, () => console.log(`App is running on port ${port}`));
+// local setup
+// const port = 8888;
 
-app.get("/", (req: Request, res: Response, next: NextFunction) =>
-  res.status(200).json({ message: "api is live" })
-);
+// app.listen(port, () => console.log(`App is running on port ${port}`));
 
+// app.get("/", (req: Request, res: Response, next: NextFunction) =>
+//   res.status(200).json({ message: "api is live" })
+// );
+
+// setup lambad hosting
+const serverless = require('serverless-http');
+
+module.exports.handler = serverless(app)
+
+// HTTP Methods
 app.get("/names", (req: Request, res: Response, next: NextFunction) => {
   try{
     const names = loadNames().names;
@@ -47,6 +55,7 @@ app.post("/search", (req: Request, res: Response, next: NextFunction) => {
 }
 );
 
+// Functions
 // Function to load all names from json file
 function loadNames() {
   const data = fs.readFileSync(__dirname+"/names.json", "utf8")
